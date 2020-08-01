@@ -1,38 +1,7 @@
 import pandas as pd
 import os
 #from lanz_phos_7_17 import write_phos
-'''
-df = pd.read_csv('entrez_uniprot_mapping', sep = '\t', header = None)
-x = list(zip(df.iloc[:, 0], df.iloc[:, 1]))
-print(x)
-raise SystemExit
-new_dict = {}
-for i in x:
-    if ',' in i:
-        i_split = i.split(',')
-        for j in i_split:
-            new_dict[j] = x[i]
-    else:
-        new_dict[i] = x[i]
 
-
-print(new_dict)
-print(len(x))
-print(len(new_dict))
-
-
-no dictionary
-go through pandas dataframe rows, select the ones with comma
-operate on that smaller pandas df
-merge the two back in the end, removing the ones with comma
-then you got your df mapping!
-
-from there go through df2 and change each one to the UniProt ID
-however, if multiple uniprot IDs, for the same entrez, then just create more tuples
-# finally, we'll create a dataframe again
-# group by the uniprot_ID and write to file (read in the csv already there, merge the two dfs, drop_duplicates(), and send back) --> or are we running Lanz and Phosphogrid analysis separate create a fxn to do this merging but maube don't use it in final analysis
-
-'''
 def write_phos(phosphosites, uniprot_id, dir = './phosphosites'):
     path = dir + "/" + uniprot_id + "_phos.csv"
     if not os.path.exists(dir):
