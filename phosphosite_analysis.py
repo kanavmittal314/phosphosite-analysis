@@ -95,6 +95,14 @@ def write_df(df, file_name, dir = "./phosphosite_analysis_results"):
         os.remove(path)
     df.to_csv(path, index=False)
 
+def write_phos(phosphosites, uniprot_id, dir = './phosphosites'):
+    path = dir + "/" + uniprot_id + "_phos.csv"
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+    if os.path.exists(path):
+        os.remove(path)
+    phosphosites.to_csv(path, header=False, index=False)
+
 ### DISTANCE FUNCTIONS
 # Filters the atoms to keep only the atoms that are on the appropriate residues and are the correct oxygens
 def get_phospho_coords_chain(residue_nums, df):

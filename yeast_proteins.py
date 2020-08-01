@@ -5,7 +5,7 @@
 # Apply operation to phosphosites to make it so that is in from chain: phosphosites using chain_gene_dict
 # Create a phosphosite_dict from those phosphosites and feed into analyze_phosphosite_distances
 
-from phosphosite_analysis_7_16 import get_chain_gene, analyze_phosphosite_distances, get_rcsb, get_phosphosites, get_chain_gene_dict, get_fasta_dict
+from phosphosite_analysis import get_chain_gene, analyze_phosphosite_distances, get_rcsb, get_phosphosites, get_chain_gene_dict, get_fasta_dict
 import pandas as pd
 import urllib.parse
 import urllib.request
@@ -122,6 +122,7 @@ def solve(pdb_ids):
     analyze_all(pdb_ids, ppdb_dict, total_phos, uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict)
 
     pd.Series(problematic).to_csv("problematic_pdb_ids.csv")
+    print(problematic)
     return "Finished"
 
 

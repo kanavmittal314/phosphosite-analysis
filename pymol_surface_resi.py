@@ -23,7 +23,7 @@ def solve(pdb_ids):
                 problematic.append(i)
     print(problematic)
 
-solve(pd.read_csv('pdb_ids.csv', header=None, dtype=str).iloc[0].to_list()[:1000])
+solve(pd.read_csv('pdb_ids.csv', header=None, dtype=str).iloc[0].to_list())
 
 
 

@@ -1,14 +1,6 @@
 import pandas as pd
 import os
-from phosphosite_analysis_7_16 import write_df
-
-def write_phos(phosphosites, uniprot_id, dir = './phosphosites'):
-    path = dir + "/" + uniprot_id + "_phos.csv"
-    if not os.path.exists(dir):
-        os.mkdir(dir)
-    if os.path.exists(path):
-        os.remove(path)
-    phosphosites.to_csv(path, header=False, index=False)
+from phosphosite_analysis import write_df, write_phos
 
 def dataset_in(file_name= "Lanz.xlsx", sheet_name = "Lanz et al. Dataset"):
     print("Reading Excel...")
