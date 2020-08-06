@@ -48,7 +48,7 @@ def analyze_all(pdb_ids, ppdb_dict, total_phos, uniprot_common_mapping, uniprot_
     global problematic
     for i in pdb_ids:
         try:
-            print(analyze_phosphosite_distances(i, ppdb_dict[i], total_phos[i], uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict))
+            print(analyze_phosphosite_distances(i.upper(), ppdb_dict[i], total_phos[i], uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict))
         except:
             print("Problem with analyzing PDB ID", i)
             problematic.append(i)

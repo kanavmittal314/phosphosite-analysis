@@ -311,6 +311,7 @@ def out_of_range(phosphosites, chain_gene):
 
 def add_surface_residues(pdb_id, df):
     surface_residues = pd.read_csv('../surface_residues/' + pdb_id + '_surfaceresidues.csv')
+    print(surface_residues)
 
     df_A = pd.merge(df, surface_residues, left_on = ['Chain A', 'Residue A'], right_on = ['Chain', 'Residue'], how='inner')
     df_B = pd.merge(df, surface_residues, left_on = ['Chain B', 'Residue B'], right_on = ['Chain', 'Residue'], how='inner')
@@ -333,17 +334,23 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
     chain_gene = get_chain_gene(ppdb)
     chain_gene_dict = chain_gene.iloc[:,:1].squeeze().to_dict()
 
+    print('here')
+
     print(check_sgd_protein(ppdb, chain_gene, fasta_dict, sgd_mapping))
     print(out_of_range(phosphosites, chain_gene))
     # Sorts phosphosites in each chain
     for elem in phosphosites:
         phosphosites[elem].sort()
 
+    print('here2')
+
     # Finds phosphosites in the protein as well as the missing phosphosites
     df = ppdb.df['ATOM']
     df_filtered = get_phospho_coords_protein(split_by_chain(df), phosphosites)
     missing_phosphosites = phosphosites_missing(
         split_by_chain(df_filtered), phosphosites)
+
+    print('here3')
 
     # Gets all linear pairs of residues
     linear_pairs = get_residue_pairs_linear_protein(split_by_chain(df), phosphosites)
@@ -354,6 +361,7 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
         split_by_chain(df), chain_gene, missing_phosphosites)
     print(analyze_discrepancy(discrepancy))
 
+    print('here4')
     # Processes the euclidean distance pairs
     residue_pairs, chain_pairs = get_residue_pairs_euclidean(df_filtered)
     residue_pairs_split, chain_pairs_split = np.hsplit(residue_pairs, 2), np.hsplit(chain_pairs, 2)
@@ -362,6 +370,8 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
 
     # Gets euclidean distances
     euclidean_distances = get_euclidean_distances(df_filtered)
+
+    print('here5')
 
     # Creates a final dataframe with the two residues and their chains and euclidean_distances
     dictionary = {"Chain A": np.squeeze(chain_1), "Residue A": np.squeeze(residue_1), "Chain B": np.squeeze(
@@ -381,9 +391,10 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
     df_final['Common Gene B'] = df_final.loc[:, 'UniProt B'].apply(lambda elem: uniprot_common[elem])
     df_final['Systematic Gene A'] = df_final.loc[:, 'UniProt A'].apply(lambda elem: uniprot_systematic[elem])
     df_final['Systematic Gene B'] = df_final.loc[:, 'UniProt B'].apply(lambda elem: uniprot_systematic[elem])
-
+    print(df_final)
+    print('here6')
     df_final = add_surface_residues(pdb_id, df_final)
- 
+    print('here7')
     # Writes dataframe to file and returns it for convenience
     write_df(df_final, pdb_id.upper() + "_analysis.csv")
     return df_final
