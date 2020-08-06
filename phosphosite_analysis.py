@@ -246,7 +246,7 @@ def check_sgd_protein(ppdb, chain_gene, fasta_dict, sgd_mapping):
 # Generates a dictionary from the SGD data mapping each SGD ID to a protein sequence
 def get_fasta_dict():
     fasta_dict = {}
-    for seq_record in SeqIO.parse("orf_trans.fasta", "fasta", generic_protein):
+    for seq_record in SeqIO.parse("../orf_trans.fasta", "fasta", generic_protein):
         fasta_dict[seq_record.description.split()[2][6:-1]] = seq_record.seq[:-1]
     return fasta_dict
     
@@ -310,7 +310,7 @@ def out_of_range(phosphosites, chain_gene):
     return dic
 
 def add_surface_residues(pdb_id, df):
-    surface_residues = pd.read_csv('surface_residues/' + pdb_id + '_surfaceresidues.csv')
+    surface_residues = pd.read_csv('../surface_residues/' + pdb_id + '_surfaceresidues.csv')
 
     df_A = pd.merge(df, surface_residues, left_on = ['Chain A', 'Residue A'], right_on = ['Chain', 'Residue'], how='inner')
     df_B = pd.merge(df, surface_residues, left_on = ['Chain B', 'Residue B'], right_on = ['Chain', 'Residue'], how='inner')
