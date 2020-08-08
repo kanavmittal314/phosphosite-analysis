@@ -118,10 +118,10 @@ def get_phospho_coords_chain(residue_nums, df):
 # Applies get_phospho_coords_chain() on all chains of the protein
 def get_phospho_coords_protein(df_split, phosphosites):
     df = pd.DataFrame()
-    for i in df_split.groups.keys():
-        if i in phosphosites:
+    for chain in df_split.groups.keys():
+        if chain in phosphosites:
             df = pd.concat([df, get_phospho_coords_chain(
-                phosphosites[i], df_split.get_group(i))])
+                phosphosites[chain], df_split.get_group(chain))])
     return df
 
 # Gives pairwise combinations of all residues

@@ -9,6 +9,7 @@ from phosphosite_analysis import get_chain_gene, analyze_phosphosite_distances, 
 import pandas as pd
 import urllib.parse
 import urllib.request
+from uniprot_mapping import get_mappings
 
 # Running list of all PDB IDs considered to be problematic
 problematic = []
@@ -90,16 +91,18 @@ def solve(pdb_ids):
     #sgd_ids, fasta_dict, Lanz_common_systematic.csv ==> args of analyze_phosphosite_distances
     #calculated in yeast_proteins.solve()
 
-    common_systematic_gene_names = pd.read_csv("Lanz_systematic_common_gene.csv")
-    common_systematic_gene_names.loc[:, 'Uniprot_id'].to_csv("All_UniProt_ID.csv", header=False, index=False)
+    #common_systematic_gene_names = pd.read_csv("Lanz_systematic_common_gene.csv")
+    #common_systematic_gene_names.loc[:, 'Uniprot_id'].to_csv("All_UniProt_ID.csv", header=False, index=False)
     
     #print(common_systematic_gene_names.to_dict())
 
-    uniprot_common_mapping = dict(zip(common_systematic_gene_names.loc[:,'Uniprot_id'], common_systematic_gene_names.loc[:,'Gene(s)']))
+    #uniprot_common_mapping = dict(zip(common_systematic_gene_names.loc[:,'Uniprot_id'], common_systematic_gene_names.loc[:,'Gene(s)']))
     #print(uniprot_common_mapping)
 
-    uniprot_systematic_mapping = dict(zip(common_systematic_gene_names.loc[:,'Uniprot_id'], common_systematic_gene_names.loc[:,'SystematicGeneName']))
+    #uniprot_systematic_mapping = dict(zip(common_systematic_gene_names.loc[:,'Uniprot_id'], common_systematic_gene_names.loc[:,'SystematicGeneName']))
     #print(uniprot_systematic_mapping)
+
+    uniprot_systematic_mapping, uniprot_common_mapping = uniprot_mapping.get_mappings()
     
     #print(common_systematic_gene_names.loc[:,'Uniprot_id'])
     #print(len(common_systematic_gene_names.loc[:,'Uniprot_id']))

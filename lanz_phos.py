@@ -2,7 +2,7 @@ import pandas as pd
 import os
 from phosphosite_analysis import write_df, write_phos
 
-def dataset_in(file_name= "Lanz.xlsx", sheet_name = "Lanz et al. Dataset"):
+def dataset_in(file_name = "Lanz.xlsx", sheet_name = "Lanz et al. Dataset"):
     print("Reading Excel...")
     try:
         excel = pd.read_excel("Lanz.xlsx", sheet_name = sheet_name).loc[:37245]
