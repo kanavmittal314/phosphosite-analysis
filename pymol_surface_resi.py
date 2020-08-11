@@ -10,6 +10,7 @@ import signal
 class TimedOutExc(Exception):
     pass
 
+# Adds a time limit for analyze
 def deadline(timeout, *args):
     def decorate(f):
         def handler(signum, frame):
@@ -25,34 +26,34 @@ def deadline(timeout, *args):
         return new_f
     return decorate
 
+# Function to analyze the surface residues for a PDB ID
 @deadline(3600)
-def analyze(i):
-    print(i)
-    cmd.fetch(i)
-    print('here')
-    findSurfaceResidues(i, pdb_id=i)
-    print('here2')
+def analyze_surface_residues(pdb_id):
+    print('Analyzing surface residues for', pdb_id)
+    cmd.fetch(pdb_id)
+    findSurfaceResidues(pdb_id, pdb_id=pdb_id) # Calls on findSurfaceResidues from FindSurfaceResidues.py
     cmd.delete('all')
-    print('here3')
     
-    path = i.lower() + '.cif'
+    # Deletes the .cif file created by PyMol
+    path = pdb_id.lower() + '.cif'
     if os.path.exists(path):
         os.remove(path)
 
-def solve(pdb_ids):
+# Analyzes surface residues for all given PDB IDs and compiles a list of problematic PDB IDs (ones that did not run properly)
+def analyze_surface_residues_all(pdb_ids):
     problematic = []
-    for i in pdb_ids:
-        if not os.path.exists('surface_residues/' + i + '_surfaceresidues.csv'):
+    for pdb_id in pdb_ids:
+        if not os.path.exists('./surface_residues/' + pdb_id + '_surfaceresidues.csv'):
             try:
-                analyze(i)
+                analyze_surface_residues(pdb_id)
             except:
-                problematic.append(i)
-            
-    print(problematic)
+                problematic.append(pdb_id)
+    return problematic
 
 
-
-#solve(pd.read_csv('pdb_ids.csv', header=None, dtype=str).iloc[0].to_list())
-solve(['6R6G', '4V8Z']) #PDB IDs that did not successfully run within 1 hour
+if __name__ == '__main__':
+    solve(pd.read_csv('pdb_ids.csv', header=None, dtype=str).iloc[0].to_list())
+    #analyze_surface_residues_all(['6R6G', '4V8Z']) #PDB IDs that did not successfully run within 1 hour
+    
 
 

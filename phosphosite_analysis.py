@@ -232,12 +232,14 @@ def check_sgd_chain(seqres, sgd):
 
 # Runs check_sgd_chain() on the whole protein
 def check_sgd_protein(ppdb, chain_gene, fasta_dict, sgd_mapping):
+    
     seqres = get_seqres(ppdb)
     match_val_dict = {}
 
     for i in chain_gene.index.values:
         uniprot = chain_gene.loc[i, 'gene ID']
         if uniprot in sgd_mapping:
+            print(sgd_mapping[uniprot])
             seq = get_seqres_chain([elem for elem in get_seqres(ppdb) if elem.split()[1] == i])
             match_val_sgd, match_val_seqres = check_sgd_chain(seq, fasta_dict[sgd_mapping[uniprot]])
             match_val_dict[i] = (match_val_sgd, match_val_seqres)
@@ -336,7 +338,10 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
 
     print('here')
 
+    print(sgd_mapping)
     print(check_sgd_protein(ppdb, chain_gene, fasta_dict, sgd_mapping))
+
+    print('hereeee')
     print(out_of_range(phosphosites, chain_gene))
     # Sorts phosphosites in each chain
     for elem in phosphosites:

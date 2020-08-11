@@ -54,6 +54,7 @@ def analyze_all(pdb_ids, ppdb_dict, total_phos, uniprot_common_mapping, uniprot_
             print("Problem with analyzing PDB ID", i)
             problematic.append(i)
 
+# Now unused
 def get_sgd_mapping(uniprot_ids):
     url = 'https://www.uniprot.org/uploadlists/' 
     
@@ -87,34 +88,7 @@ def get_sgd_mapping(uniprot_ids):
 
 # Main function that calls all other functions and writes the problematic PDB IDs to a file
 def solve(pdb_ids):
-
-    #sgd_ids, fasta_dict, Lanz_common_systematic.csv ==> args of analyze_phosphosite_distances
-    #calculated in yeast_proteins.solve()
-
-    #common_systematic_gene_names = pd.read_csv("Lanz_systematic_common_gene.csv")
-    #common_systematic_gene_names.loc[:, 'Uniprot_id'].to_csv("All_UniProt_ID.csv", header=False, index=False)
-    
-    #print(common_systematic_gene_names.to_dict())
-
-    #uniprot_common_mapping = dict(zip(common_systematic_gene_names.loc[:,'Uniprot_id'], common_systematic_gene_names.loc[:,'Gene(s)']))
-    #print(uniprot_common_mapping)
-
-    #uniprot_systematic_mapping = dict(zip(common_systematic_gene_names.loc[:,'Uniprot_id'], common_systematic_gene_names.loc[:,'SystematicGeneName']))
-    #print(uniprot_systematic_mapping)
-
-    uniprot_systematic_mapping, uniprot_common_mapping = uniprot_mapping.get_mappings()
-    
-    #print(common_systematic_gene_names.loc[:,'Uniprot_id'])
-    #print(len(common_systematic_gene_names.loc[:,'Uniprot_id']))
-    #print(len(set(common_systematic_gene_names.loc[:,'Uniprot_id'])))
-
-    
-
-    sgd_mapping = get_sgd_mapping(common_systematic_gene_names.loc[:,'Uniprot_id'])
-
-    
-    print(sgd_mapping['Q08220'])
-    print(sgd_mapping)
+    uniprot_systematic_mapping, uniprot_common_mapping, sgd_mapping = get_mappings()
     
     ppdb_dict, chain_gene_dict = get_info(pdb_ids)
 
@@ -133,6 +107,7 @@ def solve(pdb_ids):
 
 #print(solve(['1m0t']))
 #raise SystemExit
-print(solve(['1m0t', '1m2o', '1m38']))
-#print(solve(['1m2o', '1m38']))
 
+#print(solve(['1m2o', '1m38']))
+if __name__ == '__main__':
+    print(solve(['1m0t', '1m2o', '1m38']))
