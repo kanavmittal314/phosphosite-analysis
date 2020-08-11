@@ -9,7 +9,7 @@ import os
 #from phosphosite_analysis_7_16 import write_df
 
 
-def findSurfaceAtoms(selection="all", cutoff=2.5, quiet=1):
+def findSurfaceAtoms(selection="all", cutoff=2.5, quiet=1, oxygen=False):
     """
 DESCRIPTION
 
@@ -38,16 +38,19 @@ SEE ALSO
     selName = cmd.get_unused_name("exposed_atm_")
     print(selName)
     cmd.select(selName, "(" + selection + ") in " + tmpObj)
-    #cmd.select(selName + "oxygen", selName + " and ((resn SER and name OG) or (resn THR and name OG1) or (resn TYR and name OH))")
+    if oxygen:
+        cmd.select(selName + "oxygen", selName + " and ((resn SER and name OG) or (resn THR and name OG1) or (resn TYR and name OH))")
     cmd.delete(tmpObj)
 
     if not quiet:
         print("Exposed atoms are selected in: " + selName)
+    if oxygen:
+        return selName + "oxygen"
     return selName
-    #return selName + "oxygen"
+    
 
 
-def findSurfaceResidues(selection="all", cutoff=2.5, doShow=0, quiet=1, pdb_id=""):
+def findSurfaceResidues(selection="all", cutoff=2.5, doShow=0, quiet=1, pdb_id="", oxygen=False):
     """
 DESCRIPTION
 
@@ -74,7 +77,7 @@ RETURNS
     """
     cutoff, doShow, quiet = float(cutoff), int(doShow), int(quiet)
 
-    selName = findSurfaceAtoms(selection, cutoff, quiet)
+    selName = findSurfaceAtoms(selection, cutoff, quiet, oxygen)
 
     exposed = set()
     cmd.iterate(selName, "exposed.add((chain,resv))", space=locals())
