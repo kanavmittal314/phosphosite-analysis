@@ -6,7 +6,6 @@ from __future__ import print_function
 from pymol import cmd
 import pandas as pd
 import os
-#from phosphosite_analysis_7_16 import write_df
 
 
 def findSurfaceAtoms(selection="all", cutoff=2.5, quiet=1, oxygen=False):

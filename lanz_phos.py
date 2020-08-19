@@ -45,7 +45,7 @@ def main():
 
     for uniprot_id in df_split.groups.keys():
         
-        phos = df_split.get_group(uniprot_id)['Residue Number']
+        phos = df_split.get_group(uniprot_id)['Residue Number'].unique()
         write_phos(phos, uniprot_id)
     
     #write_df(df.loc[:, ['Uniprot_id', 'Gene(s)', 'SystematicGeneName']].drop_duplicates(), 'Lanz_systematic_common_gene.csv', dir = '.')

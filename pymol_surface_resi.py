@@ -31,7 +31,7 @@ def deadline(timeout, *args):
 def analyze_surface_residues(pdb_id):
     print('Analyzing surface residues for', pdb_id)
     cmd.fetch(pdb_id)
-    findSurfaceResidues(pdb_id, pdb_id=pdb_id) # Calls on findSurfaceResidues from FindSurfaceResidues.py
+    findSurfaceResidues(pdb_id, pdb_id=pdb_id, oxygen=True) # Calls on findSurfaceResidues from FindSurfaceResidues.py
     cmd.delete('all')
     
     # Deletes the .cif file created by PyMol
@@ -42,6 +42,7 @@ def analyze_surface_residues(pdb_id):
 # Analyzes surface residues for all given PDB IDs and compiles a list of problematic PDB IDs (ones that did not run properly)
 def analyze_surface_residues_all(pdb_ids):
     problematic = []
+    
     for pdb_id in pdb_ids:
         if not os.path.exists('./surface_residues/' + pdb_id + '_surfaceresidues.csv'):
             try:
@@ -52,8 +53,9 @@ def analyze_surface_residues_all(pdb_ids):
 
 
 if __name__ == '__main__':
-    solve(pd.read_csv('pdb_ids.csv', header=None, dtype=str).iloc[0].to_list())
-    #analyze_surface_residues_all(['6R6G', '4V8Z']) #PDB IDs that did not successfully run within 1 hour
+    pass
     
+    #analyze_surface_residues_all(['6R6G', '4V8Z']) #PDB IDs that did not successfully run within 1 hour
+print(analyze_surface_residues_all(pd.read_csv('pdb_ids.csv', header=None, dtype=str).iloc[0].to_list()))
 
 
