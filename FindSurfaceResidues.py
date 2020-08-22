@@ -8,7 +8,7 @@ import pandas as pd
 import os
 
 
-def findSurfaceAtoms(selection="all", cutoff=2.5, quiet=1, oxygen=False):
+def findSurfaceAtoms(selection="all", cutoff=2.5, quiet=1, oxygen=True):
     """
 DESCRIPTION
 
@@ -49,7 +49,7 @@ SEE ALSO
     
 
 
-def findSurfaceResidues(selection="all", cutoff=2.5, doShow=0, quiet=1, pdb_id="", oxygen=False):
+def findSurfaceResidues(selection="all", cutoff=2.5, doShow=0, quiet=1, pdb_id="", oxygen=True):
     """
 DESCRIPTION
 

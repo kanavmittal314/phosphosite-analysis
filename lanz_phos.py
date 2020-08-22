@@ -19,6 +19,7 @@ def multiple_proteins(df):
     write_df(excluded_phosphosites, "excluded_phosphosites.csv", dir = "./")
     return df[~df['Phosphosite'].str.contains(';')]
 
+# Problem with multiple genes...
 def common_uniprot_lanz(df):
     #df.loc[:, ['Gene(s)_split', 'Uniprot_id_split']] = 
     df['Gene(s)_split'] = df['Gene(s)'].str.split(';')
@@ -45,7 +46,7 @@ def main():
 
     for uniprot_id in df_split.groups.keys():
         
-        phos = df_split.get_group(uniprot_id)['Residue Number'].unique()
+        phos = pd.Series(df_split.get_group(uniprot_id)['Residue Number'].unique())
         write_phos(phos, uniprot_id)
     
     #write_df(df.loc[:, ['Uniprot_id', 'Gene(s)', 'SystematicGeneName']].drop_duplicates(), 'Lanz_systematic_common_gene.csv', dir = '.')
