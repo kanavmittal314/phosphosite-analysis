@@ -36,7 +36,9 @@ def get_all_phos(pdb_ids, chain_gene_dict):
         phosphosites = {}
         try:
             for j in chain_gene:
+                print(get_phosphosites("./phosphosites/" + chain_gene[j] + "_phos.csv"))
                 phosphosites[j] = get_phosphosites("./phosphosites/" + chain_gene[j] + "_phos.csv").to_numpy().sort()
+                print(phosphosites[j])
         except SystemExit:
             print("Problem with getting phosphosites for PDB ID", i)
             problematic.append(i)
@@ -93,6 +95,7 @@ def solve(pdb_ids):
     ppdb_dict, chain_gene_dict = get_info(pdb_ids)
 
     total_phos = get_all_phos(pdb_ids, chain_gene_dict)
+    print(total_phos)
 
     fasta_dict = get_fasta_dict()
 
