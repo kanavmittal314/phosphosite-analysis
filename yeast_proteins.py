@@ -7,9 +7,11 @@
 
 from phosphosite_analysis import get_chain_gene, analyze_phosphosite_distances, get_rcsb, get_phosphosites, get_chain_gene_dict, get_fasta_dict
 import pandas as pd
+import numpy as np
 import urllib.parse
 import urllib.request
 from uniprot_mapping import get_mappings
+from interface import interface_analysis
 
 # Running list of all PDB IDs considered to be problematic
 problematic = []
@@ -36,8 +38,12 @@ def get_all_phos(pdb_ids, chain_gene_dict):
         phosphosites = {}
         try:
             for j in chain_gene:
-                print(get_phosphosites("./phosphosites/" + chain_gene[j] + "_phos.csv"))
-                phosphosites[j] = get_phosphosites("./phosphosites/" + chain_gene[j] + "_phos.csv").to_numpy().sort()
+                print("here1")
+                phos = get_phosphosites("./phosphosites/" + chain_gene[j] + "_phos.csv")
+                print("here2")
+                print(phos)
+                print(type(phos))
+                phosphosites[j] = np.sort(get_phosphosites("./phosphosites/" + chain_gene[j] + "_phos.csv").to_numpy())#.to_list().sort()
                 print(phosphosites[j])
         except SystemExit:
             print("Problem with getting phosphosites for PDB ID", i)
@@ -47,11 +53,11 @@ def get_all_phos(pdb_ids, chain_gene_dict):
     return total_phos
 
 # Runs the phosphosite_analysis on each PDB using the phosphosites from get_all_phos()
-def analyze_all(pdb_ids, ppdb_dict, total_phos, uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict):
+def analyze_all(pdb_ids, ppdb_dict, total_phos, uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict, interface_residues):
     global problematic
     for i in pdb_ids:
         try:
-            print(analyze_phosphosite_distances(i.upper(), ppdb_dict[i], total_phos[i], uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict))
+            print(analyze_phosphosite_distances(i.upper(), ppdb_dict[i], total_phos[i], uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict, interface_residues))
         except:
             print("Problem with analyzing PDB ID", i)
             problematic.append(i)
@@ -90,16 +96,19 @@ def get_sgd_mapping(uniprot_ids):
 
 # Main function that calls all other functions and writes the problematic PDB IDs to a file
 def solve(pdb_ids):
+    print('checkpoint2')
     uniprot_systematic_mapping, uniprot_common_mapping, sgd_mapping = get_mappings()
-    
+    print('checkpoint3')
     ppdb_dict, chain_gene_dict = get_info(pdb_ids)
 
+    print('checkpoint1')
     total_phos = get_all_phos(pdb_ids, chain_gene_dict)
     print(total_phos)
 
     fasta_dict = get_fasta_dict()
+    interface_residues = interface_analysis()
 
-    analyze_all(pdb_ids, ppdb_dict, total_phos, uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict)
+    analyze_all(pdb_ids, ppdb_dict, total_phos, uniprot_common_mapping, uniprot_systematic_mapping, sgd_mapping, fasta_dict, interface_residues)
 
     pd.Series(problematic).to_csv("problematic_pdb_ids.csv")
     print(problematic)

@@ -19,6 +19,15 @@ def foo(df):
         dic[uniprot_id] = lst
     return dic
 
+def interface_analysis():
+    x = analyze_interface()
+    p1 = x.loc[:, ["P1", "P1_Interface_residues_numbers"]]
+    p1.columns = ['Protein', 'Interface_residues_numbers']
+    p2 = x.loc[:, ["P2", "P2_Interface_residues_numbers"]]
+    p2.columns = ['Protein', 'Interface_residues_numbers']
+    y = pd.concat([p1, p2])
+    return foo(y)
+    #return foo(analyze_interface().loc[:, ["P1", "P1_Interface_residues_numbers"]])
 
 # take loc of P1, P1_interface_phosphosites
 
@@ -53,10 +62,10 @@ def get_interface():
     return foo(y)
 
 if __name__ == "__main__":
-    print(get_interface())
-    raise SystemExit
-    print(analyze_interface())
-    dic = (foo(analyze_interface().loc[:, ["P1", "P1_Interface_residues_numbers"]]))
+    dic = interface_analysis()
+    for elem in dic:
+        dic[elem] = str(dic[elem])
     print(dic)
+    pd.DataFrame.from_dict(dic).to_csv()
     #print(dic[])
     #print(convert_list_to_numbers('[19-21,23-24,50,60,63,67,81,84-85,90,95-97,100,103-104,132,143,146-147,150,160,162-163,167,169-173,175-176,179-180,183,186-187,190-191,195,198-200,204-205,208-209,217,220,233-234,236-237,240,258,262-263,265-266,268-271,277,280-281,283-284]'))

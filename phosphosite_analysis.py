@@ -68,7 +68,7 @@ def get_phosphosites(path):
         return pd.Series()
     try:
         print(path)
-        print( pd.read_csv(path, squeeze=True))
+        print(pd.read_csv(path, squeeze=True))
         return pd.read_csv(path, squeeze=True)
         '''
         df_split = split_by_chain(pd.read_csv(path, names=['chain_id', 'residue_number'], header=0))
@@ -333,10 +333,12 @@ def add_surface_residues(pdb_id, df):
     return df
 
 def add_interface_residues(df, interface_dict):
-    pass
-    
+    df['Interface A'] = df.apply(lambda elem: elem['Residue A'] in interface_dict[elem['UniProt A']], axis = 1 )
+    df['Interface B'] = df.apply(lambda elem: elem['Residue B'] in interface_dict[elem['UniProt B']], axis = 1 )
+    return df
+
 ### MAIN METHOD
-def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, uniprot_systematic, sgd_mapping, fasta_dict): #interface_residues):
+def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, uniprot_systematic, sgd_mapping, fasta_dict, interface_residues):
     
     # Analyzes the file to map each chain to a gene
     chain_gene = get_chain_gene(ppdb)
@@ -406,6 +408,7 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
     print(df_final)
     print('here6')
     df_final = add_surface_residues(pdb_id, df_final)
+    df_final = add_interface_residues(df_final, interface_residues)
     print('here7')
     # Writes dataframe to file and returns it for convenience
     write_df(df_final, pdb_id.upper() + "_analysis.csv")
