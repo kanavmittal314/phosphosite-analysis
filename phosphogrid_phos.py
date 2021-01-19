@@ -8,7 +8,7 @@ def get_entrez_uniprot_mapping():
 
     with_commas = df[df.iloc[:,0].str.contains(',')].to_numpy()
     commas_mapping = []
-
+  
     for i in with_commas:
         for j in i[0].split(','):
             commas_mapping.append((j, i[1]))
