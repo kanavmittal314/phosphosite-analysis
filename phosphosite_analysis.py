@@ -67,6 +67,8 @@ def get_phosphosites(path):
         print("No phosphosites found")
         return pd.Series()
     try:
+        print(path)
+        print(pd.read_csv(path, squeeze=True))
         return pd.read_csv(path, squeeze=True)
         '''
         df_split = split_by_chain(pd.read_csv(path, names=['chain_id', 'residue_number'], header=0))
@@ -95,7 +97,7 @@ def write_df(df, file_name, dir = "./phosphosite_analysis_results"):
         os.remove(path)
     df.to_csv(path, index=False)
 
-def write_phos(phosphosites, uniprot_id, dir = './phosphosites'):
+def write_phos(phosphosites, uniprot_id, dir):
     path = dir + "/" + uniprot_id + "_phos.csv"
     if not os.path.exists(dir):
         os.mkdir(dir)
@@ -305,6 +307,7 @@ def analyze_discrepancy(discrepancy):
 
 def out_of_range(phosphosites, chain_gene):
     dic = {}
+    print(phosphosites)
     for chain in phosphosites:
         phos = phosphosites[chain]
         supposed_range = chain_gene.loc[chain, 'amino acids']
@@ -328,9 +331,14 @@ def add_surface_residues(pdb_id, df):
     df['Surface B'] = df.apply(lambda elem: (elem['Chain B'], elem['Residue B']) in tuple_list_B, axis=1)
 
     return df
-    
+
+def add_interface_residues(df, interface_dict):
+    df['Interface A'] = df.apply(lambda elem: elem['Residue A'] in interface_dict[elem['UniProt A']], axis = 1 )
+    df['Interface B'] = df.apply(lambda elem: elem['Residue B'] in interface_dict[elem['UniProt B']], axis = 1 )
+    return df
+
 ### MAIN METHOD
-def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, uniprot_systematic, sgd_mapping, fasta_dict):
+def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, uniprot_systematic, sgd_mapping, fasta_dict, interface_residues):
     
     # Analyzes the file to map each chain to a gene
     chain_gene = get_chain_gene(ppdb)
@@ -338,10 +346,11 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
 
     print('here')
 
-    print(sgd_mapping)
+    #print(sgd_mapping)
     print(check_sgd_protein(ppdb, chain_gene, fasta_dict, sgd_mapping))
 
     print('hereeee')
+    print(phosphosites)
     print(out_of_range(phosphosites, chain_gene))
     # Sorts phosphosites in each chain
     for elem in phosphosites:
@@ -399,6 +408,7 @@ def analyze_phosphosite_distances(pdb_id, ppdb, phosphosites, uniprot_common, un
     print(df_final)
     print('here6')
     df_final = add_surface_residues(pdb_id, df_final)
+    df_final = add_interface_residues(df_final, interface_residues)
     print('here7')
     # Writes dataframe to file and returns it for convenience
     write_df(df_final, pdb_id.upper() + "_analysis.csv")
