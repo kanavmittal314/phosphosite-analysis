@@ -6,7 +6,7 @@ def dataset_in(file_name = "lanz_dataset.xlsx", sheet_name = "Lanz et al. Datase
     print("Reading Excel...")
     try:
         excel = pd.read_excel(io = file_name, sheet_name = sheet_name)
-        print("Excel Read")
+        print("ExcelRead")
     except:
         print("Excel file problem")
         raise SystemExit  
